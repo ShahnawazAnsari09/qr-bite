@@ -124,6 +124,8 @@ host.
 
 ## Deployment
 
+Live at **https://qr-bite-agzl.onrender.com** — staff dashboard at `/staff`.
+
 The app ships as one service: Express serves the built React bundle, so the diner's
 phone reaches the site, the API and the Socket.io feed on a single origin. That is what
 makes a free single-instance host workable.
@@ -146,8 +148,19 @@ makes a free single-instance host workable.
 `RENDER_EXTERNAL_URL`, which already carries the scheme, so table QR codes encode the
 right host on the first deploy and the service's own origin is always CORS-allowed.
 
-Three things that bite:
+Four things that bite:
 
+- **`mongodb+srv://` may not resolve on a home network, which makes step 3 fail.** The
+  srv form needs a DNS `SRV` record lookup, and plenty of consumer routers answer `A`
+  queries while refusing `SRV` ones — the driver then dies with
+  `querySrv ECONNREFUSED`, before any authentication, so it reads like a credentials or
+  allowlist problem rather than a DNS one. Confirm with
+  `nslookup -type=SRV _mongodb._tcp.<cluster>.mongodb.net 8.8.8.8`: if a public resolver
+  answers and your default one does not, that is the fault. Either point the machine at
+  `8.8.8.8`, or write the cluster as an explicit host list, which needs no SRV record:
+  `mongodb://<user>:<pass>@<host>-00.mongodb.net:27017,<host>-01…/qrbite?ssl=true&authSource=admin`
+  (take the hostnames from the SRV answer above). Render's own DNS handles the srv form,
+  so this affects seeding from a laptop, not the deployed service.
 - **`NODE_ENV=production` breaks the build unless you ask for dev dependencies.**
   Render applies environment variables at build time too, and npm reads
   `NODE_ENV=production` as "skip devDependencies" — which drops `vite`, the tool the
