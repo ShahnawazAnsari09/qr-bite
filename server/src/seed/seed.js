@@ -84,8 +84,8 @@ async function seedRestaurant() {
 
   return Restaurant.create({
     name: env.seed.restaurantName,
-    address: '14 MG Road, Bengaluru 560001',
-    phone: '+91 80 4000 1234',
+    address: '90 Feet Road, Sakinaka, Mumbai 400072',
+    phone: '+91 963 966 8350',
     taxPercent: 5,
   });
 }
