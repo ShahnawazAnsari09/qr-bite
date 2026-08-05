@@ -15,7 +15,11 @@ services:
     name: qr-bite
     runtime: node
     plan: free
-    buildCommand: npm ci && npm run build
+    # --include=dev is load-bearing. NODE_ENV=production below applies to the
+    # build as well as the runtime, and npm reads it as "skip devDependencies" —
+    # which drops vite, the thing the build is trying to run. Without this the
+    # build fails with `sh: 1: vite: not found` and exit code 127.
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:

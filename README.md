@@ -146,12 +146,17 @@ makes a free single-instance host workable.
 `RENDER_EXTERNAL_URL`, which already carries the scheme, so table QR codes encode the
 right host on the first deploy and the service's own origin is always CORS-allowed.
 
-Two things that bite on the free plan:
+Three things that bite:
 
+- **`NODE_ENV=production` breaks the build unless you ask for dev dependencies.**
+  Render applies environment variables at build time too, and npm reads
+  `NODE_ENV=production` as "skip devDependencies" — which drops `vite`, the tool the
+  build runs. Hence `npm ci --include=dev` in the blueprint's build command; remove it
+  and the build fails with `sh: 1: vite: not found`.
 - **`PORT` is not injected.** Render expects `10000`; `config/env.js` defaults to
   `5000`. The blueprint sets `PORT=10000` explicitly so `/api/health` can be reached —
   don't remove it.
-- **The instance sleeps after ~15 minutes idle**, and the next request pays a cold
+- **The free instance sleeps after ~15 minutes idle**, and the next request pays a cold
   start of roughly a minute. Wake it before a demo.
 
 ### DATA_ENCRYPTION_KEY must match everywhere
