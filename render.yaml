@@ -1,0 +1,62 @@
+# Render blueprint. Point Render at this repository and it will pick this up.
+#
+# Only three values need filling in by hand, and Render prompts for all three:
+# MONGODB_URI, DATA_ENCRYPTION_KEY and the Atlas credentials inside the URI.
+#
+# The service's own address is NOT one of them: config/env.js reads Render's
+# RENDER_EXTERNAL_URL for CLIENT_URL and CORS, so table QR codes encode the
+# right host on the very first deploy. Set CLIENT_URL explicitly only when
+# putting a custom domain in front.
+#
+# Seeding happens from a developer machine pointed at the same Atlas URI, not
+# here — a free instance has no shell. See "Deployment" in the README.
+services:
+  - type: web
+    name: qr-bite
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # Render does NOT inject PORT — it expects 10000 unless told otherwise,
+      # while config/env.js falls back to 5000. Bind them together explicitly
+      # so the /api/health check can reach the service.
+      - key: PORT
+        value: "10000"
+
+      # package.json only asks for >=18.17; pin the major so a future Render
+      # default cannot move underneath the build.
+      - key: NODE_VERSION
+        value: "20"
+
+      # MongoDB Atlas connection string (Render has no managed MongoDB).
+      # Allow access from 0.0.0.0/0 in Atlas, or from Render's static outbound IPs.
+      - key: MONGODB_URI
+        sync: false
+
+      # Generated once by Render and then held steady across deploys.
+      - key: JWT_SECRET
+        generateValue: true
+
+      # NOT generated: rotating this makes every stored customer name and phone
+      # number unreadable. Set it once, before the first seed, and keep it.
+      - key: DATA_ENCRYPTION_KEY
+        sync: false
+
+      - key: JWT_EXPIRES_IN
+        value: 12h
+      - key: CUSTOMER_TOKEN_EXPIRES_IN
+        value: 24h
+
+      - key: WHATSAPP_PROVIDER
+        value: mock
+      - key: WHATSAPP_DEFAULT_COUNTRY_CODE
+        value: "91"
+
+      # No SEED_* variables here on purpose. `npm run seed` runs from a
+      # developer machine against the Atlas URI, so these would be unused
+      # config carrying weak demo passwords into the environment.

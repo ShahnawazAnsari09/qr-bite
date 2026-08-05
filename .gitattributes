@@ -1,0 +1,11 @@
+# Committed with LF regardless of the checkout platform. The repo is authored on
+# Windows and built on Linux (Render, Docker), and without this the whole tree
+# reads as modified after a fresh clone on the other one.
+* text=auto eol=lf
+
+# Binary, never touched.
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
