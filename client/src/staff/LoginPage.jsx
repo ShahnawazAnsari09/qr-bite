@@ -71,10 +71,7 @@ export default function LoginPage() {
           {busy ? 'Signing in…' : 'Sign in'}
         </button>
 
-        <div className="demo-note">
-          Seeded demo logins — admin <code>admin / Admin@123</code>, floor staff{' '}
-          <code>staff01 / Staff@123</code>. Run <code>npm run seed</code> if these do not work yet.
-        </div>
+
 
         <p className="hint" style={{ marginTop: 14, textAlign: 'center' }}>
           <Link to="/">Back to the customer site</Link>
