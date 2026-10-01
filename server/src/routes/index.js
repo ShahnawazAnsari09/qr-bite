@@ -18,5 +18,6 @@ router.use('/tables', require('./table.routes'));
 router.use('/orders', require('./order.routes'));
 router.use('/customers', require('./customer.routes'));
 router.use('/reports', require('./report.routes'));
-
+// WhatsApp webhook for Meta
+router.use('/whatsapp/webhook', require('./whatsapp.webhook.routes'));
 module.exports = router;
