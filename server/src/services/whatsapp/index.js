@@ -11,6 +11,7 @@ const providers = {
   mock: require('./mock.provider'),
   meta: require('./meta.provider'),
   twilio: require('./twilio.provider'),
+   richautomate: require('./richautomate.provider'),
 };
 
 /**
