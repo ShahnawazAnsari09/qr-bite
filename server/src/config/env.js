@@ -78,6 +78,13 @@ const env = {
       authToken: process.env.TWILIO_AUTH_TOKEN || '',
       from: process.env.TWILIO_WHATSAPP_FROM || '',
     },
+    richautomate: {
+  apiKey: process.env.RICHAUTOMATE_API_KEY || '',
+  baseUrl: process.env.RICHAUTOMATE_BASE_URL || 'https://richautomate.in/api/v1',
+  templateOrderConfirmation:
+    process.env.RICHAUTOMATE_TEMPLATE_ORDER_CONFIRMATION || '',
+  templateLanguage: process.env.RICHAUTOMATE_TEMPLATE_LANGUAGE || 'en_US',
+},
   },
 
   seed: {
