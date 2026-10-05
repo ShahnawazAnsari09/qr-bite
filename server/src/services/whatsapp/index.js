@@ -105,7 +105,10 @@ async function sendOrderConfirmation({ restaurant, customer, order }) {
     order,
     type: MESSAGE_TYPE.ORDER_CONFIRMATION,
     body,
-    templateName: env.whatsapp.meta.templateOrderConfirmation,
+    templateName:
+  env.whatsapp.provider === 'richautomate'
+    ? env.whatsapp.richautomate.templateOrderConfirmation
+    : env.whatsapp.meta.templateOrderConfirmation,
     templateVars: templates.orderConfirmationTemplateVars({
       customerName: customer.name,
       order,
