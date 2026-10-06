@@ -35,7 +35,7 @@ const richAutomateProvider = {
 
       throw new Error(`RichAutomate WhatsApp API error: ${detail}`);
     }
-
+console.log('RichAutomate response:', JSON.stringify(data));
     return {
       providerMessageId:
         data?.messageId ||
