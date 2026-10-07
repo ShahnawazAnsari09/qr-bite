@@ -60,21 +60,52 @@ console.log('RichAutomate response:', JSON.stringify(data));
   },
 
   async sendTemplate({ to, templateName, variables = [], language }) {
-    const phone = normalizePhone(to);
+  const phone = normalizePhone(to);
 
-    if (!phone) {
-      throw new Error('Invalid customer phone number');
+  if (!phone) {
+    throw new Error('Invalid customer phone number');
+  }
+
+  const { templateLanguage, apiKey, baseUrl } = env.whatsapp.richautomate;
+
+  const result = await this.request('/send-template', {
+    phone,
+    template: templateName,
+    language: language || templateLanguage,
+    variables: variables.map((value) => String(value)),
+  });
+
+  // Temporary diagnostic: check WhatsApp delivery status
+  if (result.providerMessageId) {
+    try {
+      const statusUrl =
+        `${baseUrl.replace(/\/$/, '')}/message-status/${result.providerMessageId}`;
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      const statusResponse = await fetch(statusUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const statusData = await statusResponse.json().catch(() => ({}));
+
+      console.log(
+        'RichAutomate message status:',
+        JSON.stringify(statusData)
+      );
+    } catch (error) {
+      console.error(
+        'RichAutomate status check failed:',
+        error.message
+      );
     }
+  }
 
-    const { templateLanguage } = env.whatsapp.richautomate;
-
-    return this.request('/send-template', {
-      phone,
-      template: templateName,
-      language: language || templateLanguage,
-      variables: variables.map((value) => String(value)),
-    });
-  },
-};
+  return result;
+},
 
 module.exports = richAutomateProvider;
