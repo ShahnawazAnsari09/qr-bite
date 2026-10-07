@@ -107,5 +107,5 @@ console.log('RichAutomate response:', JSON.stringify(data));
 
   return result;
 },
-
+};
 module.exports = richAutomateProvider;
