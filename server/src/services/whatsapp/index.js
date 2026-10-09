@@ -126,12 +126,20 @@ async function sendOrderServed({ restaurant, customer, order }) {
   });
 
   return dispatch({
-    restaurantId: restaurant._id,
-    customer,
-    order,
-    type: MESSAGE_TYPE.ORDER_SERVED,
-    body,
-  });
+  restaurantId: restaurant._id,
+  customer,
+  order,
+  type: MESSAGE_TYPE.ORDER_SERVED,
+  body,
+  templateName:
+    env.whatsapp.provider === 'richautomate'
+      ? env.whatsapp.richautomate.templateOrderServed
+      : env.whatsapp.meta.templateOrderServed,
+  templateVars: [
+    customer.name || 'there',
+    order.orderNumber,
+  ],
+});
 }
 
 /**
@@ -155,9 +163,16 @@ async function sendCampaign({ restaurant, customers, body, type, sentBy, campaig
             customerName: customer.name,
             restaurantName: restaurant.name,
           }),
-          templateName:
-            type === MESSAGE_TYPE.PROMOTION ? env.whatsapp.meta.templatePromotion : '',
-          templateVars: [customer.name || 'there'],
+         templateName:
+  type === MESSAGE_TYPE.PROMOTION
+    ? env.whatsapp.provider === 'richautomate'
+      ? env.whatsapp.richautomate.templatePromotion
+      : env.whatsapp.meta.templatePromotion
+    : '',
+templateVars:
+  type === MESSAGE_TYPE.PROMOTION
+    ? [customer.name || 'there', body]
+    : [],
           sentBy,
           campaignId,
         })
