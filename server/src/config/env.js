@@ -82,8 +82,13 @@ const env = {
   apiKey: process.env.RICHAUTOMATE_API_KEY || '',
   baseUrl: process.env.RICHAUTOMATE_BASE_URL || 'https://richautomate.in/api/v1',
   templateOrderConfirmation:
-    process.env.RICHAUTOMATE_TEMPLATE_ORDER_CONFIRMATION || '',
-  templateLanguage: process.env.RICHAUTOMATE_TEMPLATE_LANGUAGE || 'en_US',
+  process.env.RICHAUTOMATE_TEMPLATE_ORDER_CONFIRMATION || '',
+templateOrderServed:
+  process.env.RICHAUTOMATE_TEMPLATE_ORDER_SERVED || '',
+templatePromotion:
+  process.env.RICHAUTOMATE_TEMPLATE_PROMOTION || '',
+templateLanguage:
+  process.env.RICHAUTOMATE_TEMPLATE_LANGUAGE || 'en_US',
 },
   },
 
